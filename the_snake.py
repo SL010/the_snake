@@ -69,10 +69,10 @@ class Apple(GameObject):
     
 class Snake(GameObject):
     pass
-    def __init__(self, lenght=1, direction=RIGHT, next_direction=None, body_color=(0,255,0)):
+    def __init__(self, length=1, direction=RIGHT, next_direction=None, body_color=(0,255,0)):
        super().__init__(body_color)
-       self.lenght = lenght
-       self.position = [(0,0 )]
+       self.length = length
+       self.positions = [(0, 0)]
        self.direction = direction
        self.next_direction=next_direction
        
@@ -85,7 +85,8 @@ class Snake(GameObject):
     добавляя новую голову в начало списка positions и удаляя 
     последний элемент, если длина змейки не увеличилась'''
     def move(self):
-       self.position = get_head_position()
+       self.positions = self.get_head_position()
+       #if self.direction == self.next_direction
        #while self.direction == RIGHT:
         #   self.position.insert()
          #  self.position.pop()
@@ -114,7 +115,7 @@ class Snake(GameObject):
     
     #Функция возвращает место положения головы змеи
     def get_head_position(self):
-        return self.position[0]
+        return self.positions[0]
     
     def reset(self):
         pass
