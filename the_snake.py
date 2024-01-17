@@ -74,6 +74,7 @@ class Snake(GameObject):
        self.positions = [(0, 0), (0,20)]
        self.direction = direction
        self.next_direction=next_direction
+       self.last = None
        
     # Метод обновления направления после нажатия на кнопку
     def update_direction(self):
@@ -134,7 +135,13 @@ class Snake(GameObject):
         return self.positions[0]
     
     def reset(self):
-        pass
+        if self.get_head_position() in self.positions:
+            #screen.fill(BOARD_BACKGROUND_COLOR)
+            self.length = 1
+            self.position = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
+            self.direction = choice(RIGHT, LEFT, UP, DOWN)
+
+
 
 def handle_keys(game_object):
     for event in pygame.event.get():
