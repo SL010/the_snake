@@ -68,15 +68,14 @@ class Apple(GameObject):
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
     
 class Snake(GameObject):
-    pass
-    def __init__(self, length=1, direction=RIGHT, next_direction=None, body_color=(0,255,0)):
+    def __init__(self, length=1, direction=RIGHT, next_direction=None, body_color=(SNAKE_COLOR)):
        super().__init__(body_color)
        self.length = length
-       self.positions = [(0, 0)]
+       self.positions = [(0, 0), (0,20)]
        self.direction = direction
        self.next_direction=next_direction
        
-
+    # Метод обновления направления после нажатия на кнопку
     def update_direction(self):
        if self.next_direction:
            self.direction = self.next_direction
@@ -85,12 +84,29 @@ class Snake(GameObject):
     добавляя новую голову в начало списка positions и удаляя 
     последний элемент, если длина змейки не увеличилась'''
     def move(self):
-       self.positions = self.get_head_position()
-       #if self.direction == self.next_direction
-       #while self.direction == RIGHT:
-        #   self.position.insert()
-         #  self.position.pop()
+        head_position = self.get_head_position()
+        if self.direction == RIGHT:
+            x_cord = head_position[0] + GRID_SIZE
+            y_cord = head_position[1]
+            self.positions.insert(0, (x_cord, y_cord))
+            self.positions.pop(1)
+        elif self.direction == DOWN:
+            x_cord = head_position[0]
+            y_cord = head_position[1] - GRID_SIZE
+            self.positions.insert(0, (x_cord, y_cord))
+            self.positions.pop(1)
         
+        elif self.direction == UP:
+            x_cord = head_position[0]
+            y_cord = head_position[1] + GRID_SIZE
+            self.positions.insert(0, (x_cord, y_cord))
+            self.positions.pop(1)
+        elif self.direction == LEFT:
+            x_cord = head_position[0] - GRID_SIZE
+            y_cord = head_position[1]
+            self.positions.insert(0, (x_cord, y_cord))
+            self.positions.pop(1)           
+     
 
     def draw(self, surface):
         for position in self.positions[:-1]:
@@ -105,7 +121,7 @@ class Snake(GameObject):
         pygame.draw.rect(surface, self.body_color, head_rect)
         pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
 
-     # Затирание последнего сегмента
+     #Затирание последнего сегмента
         if self.last:
             last_rect = pygame.Rect(
                 (self.last[0], self.last[1]),
@@ -135,19 +151,16 @@ def handle_keys(game_object):
             elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
 
-#Метод обновления направления после нажатия на кнопку
-def update_direction(self):
-    if self.next_direction:
-        self.direction = self.next_direction
-        self.next_direction = None
-
 
 
 def main():
     # Тут нужно создать экземпляры классов.
-    #snake = Snake
+    snake = Snake()
     apple = Apple()
     apple.draw(screen)
+    snake.draw(screen)
+    snake.move()
+    snake.draw(screen)
     while True:
         clock.tick(SPEED)
 
@@ -155,7 +168,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
-
+        
         # Тут опишите основную логику игры.
         #Вызов функции нажатия на клавишы
         #handle_keys()
