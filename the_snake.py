@@ -30,7 +30,7 @@ APPLE_COLOR = (255, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки:
-SPEED = 5
+SPEED = 10
 
 # Настройка игрового окна:
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -89,20 +89,13 @@ class Snake(GameObject):
     последний элемент, если длина змейки не увеличилась'''
     def move(self):
         head_position = self.get_head_position()
-        #self.update_direction()
         x_cord = (head_position[0] + self.direction[0]*GRID_SIZE) % SCREEN_WIDTH
         y_cord = (head_position[1] + self.direction[1]*GRID_SIZE) % SCREEN_HEIGHT
         new_position = (x_cord, y_cord)
-        if new_position in self.positions[1:]:
-            self.reset()
         self.positions.insert(0, (new_position))
         if len(self.positions) > self.length:
             self.last = self.positions[-1]
             self.positions.pop(-1)
-        
-       
-          
-        
 
     def draw(self, surface):
         for position in self.positions[:-1]:
@@ -130,11 +123,10 @@ class Snake(GameObject):
         return self.positions[0]
     
     def reset(self):
-        #screen.fill(BOARD_BACKGROUND_COLOR)
         self.length = 1
-        self.positions = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
-        self.direction = choice(RIGHT, LEFT, UP, DOWN)
-        
+        self.positions = [(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)]
+        self.direction = choice([RIGHT, LEFT, UP, DOWN])
+        screen.fill(BOARD_BACKGROUND_COLOR)
 
 
     def handle_keys(self):
@@ -159,30 +151,13 @@ def main():
     snake = Snake()
     apple = Apple()
     apple.randomize_position()
-    #apple.draw(screen)
-    #snake.draw(screen)
-    #snake.move()
-    #snake.draw(screen)
+
     while True:
         clock.tick(SPEED)
 
         apple.draw(screen)
         # Тут опишите основную логику игры.
         #Вызов функции нажатия на клавишы
-        #def handle_keys(self):
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         pygame.quit()
-        #         raise SystemExit
-        #     elif event.type == pygame.KEYDOWN:
-        #         if event.key == pygame.K_UP and snake.direction != DOWN:
-        #             snake.next_direction = UP
-        #         elif event.key == pygame.K_DOWN and snake.direction != UP:
-        #             snake.next_direction = DOWN
-        #         elif event.key == pygame.K_LEFT and snake.direction != RIGHT:
-        #             snake.next_direction = LEFT
-        #         elif event.key == pygame.K_RIGHT and snake.direction != LEFT:
-        #             snake.next_direction = RIGHT
         snake.handle_keys()
         snake.update_direction()
         #Вызов функции отвечающий за движение змейки
@@ -193,8 +168,8 @@ def main():
             apple.randomize_position()
             snake.length += 1
         #Проверка на столкновение змейки
-        # if snake.get_head_position() in snake.positions[1:]:
-        #     snake.reset()
+        if snake.get_head_position() in snake.positions[1:]:
+            snake.reset()
         #отрисовать змейку
         snake.draw(screen)
 
